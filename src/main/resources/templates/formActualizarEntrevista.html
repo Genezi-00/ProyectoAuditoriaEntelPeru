@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Buscar por DNI</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<style>
+		body {
+			background: linear-gradient(135deg, #007BFF, #B5EAEA, #007BFF);
+			font-family: 'Open Sans', sans-serif;
+			min-height: 100vh;
+			/*display: flex;*/
+			/*justify-content: center;*/
+			/*align-items: center;*/
+			/*flex-direction: column;*/
+		}
+
+		.container {
+			background-color: #f8f9fa;
+			width: 60%;
+			padding: 20px;
+			border-radius: 5px;
+			/*text-align: center;*/
+		}
+
+		h1 {
+			color: rgb(0, 128, 192);
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		.justificado {
+			text-align: justify;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container mt4">
+		<form th:object="${entrevista}" method="post" action="/entrevista/guardar" class="row g-3">
+			<h2 class="text-center">Datos del usuario</h2>
+			<input type="hidden" name="estado" id="estado" th:field="*{estado}" required />
+			<input type="hidden" id="cod_entrevista" th:field="*{cod_entrevista}" readonly>
+			<div class="mb-3">
+				<input type="hidden" name="auditoria.codigo_auditoria" th:field="*{auditoria.codigo_auditoria}" class="form-control"
+					readonly />
+			</div>
+			<div class="col-md-4">
+				<label class="form-label">Dni Empleado</label>
+					<input type="text" name="empleado.DNI" id="DNI" th:field="*{empleado.DNI}" class="form-control" readonly />
+			</div>
+			<div class="col-md-6"></div>
+			<div class="col-md-2">
+				<a class="btn btn-outline-dark col-md-12" th:href="@{'/entrevista/' + ${entrevista.auditoria.codigo_auditoria}}">Volver</a>
+			</div>
+			<div class="col-md-6">
+				<label class="form-label">Nombre Empleado</label>	
+					<input type="text" th:field="*{empleado.nombreEmpleado}" class="form-control" readonly />
+			</div>
+			<div class="col-md-6">
+				<label class="form-label">Apellido Empleado</label>
+					<input type="text" th:field="*{empleado.apellidoEmpleado}" class="form-control" readonly />
+			</div>
+			<div class="col-md-4">
+				<label class="form-label">Cargo Empleado</label>
+				<input type="text" th:field="*{empleado.cargo}" class="form-control" readonly />
+			</div>
+			<div class="col-md-2">
+				<label class="form-label">Area Empleado</label>
+					<input type="text" th:field="*{empleado.area}" class="form-control" readonly />
+			</div>
+			<hr class="my-4">
+			<div class="col-md-6">
+				<div class="form-group mb-4">
+						<label class="form-label">
+							<th:block th:with="preguntaNumero1=${pregunta1 != null} ? ${pregunta1} : 'Pregunta 1'">
+								<span class="fw-bold" th:text="${preguntaNumero1}"></span>
+							</th:block>
+						</label>
+						<textarea th:field="*{pregunta1}" class="form-control" placeholder="Escribir.."
+							autocomplete="off" th:readonly="${mensaje != null}"  rows="5" cols="50" required></textarea>
+					</div>
+					<div class="form-group mb-4">
+						<label class="form-label">
+							<th:block th:with="preguntaNumero2=${pregunta2 != null} ? ${pregunta2} : 'Pregunta 2'">
+								<span class="fw-bold" th:text="${preguntaNumero2}">
+							</th:block>
+						</label>
+						<textarea th:field="*{pregunta2}" class="form-control" placeholder="Escribir.."
+							autocomplete="off" th:readonly="${mensaje != null}" rows="5" cols="50" required></textarea>
+					</div>
+					<div class="form-group mb-3">
+						<label class="form-label">
+							<th:block th:with="preguntaNumero3=${pregunta3 != null} ? ${pregunta3} : 'Pregunta 3'">
+								<span class="fw-bold" th:text="${preguntaNumero3}">
+							</th:block>
+						</label>
+						<textarea th:field="*{pregunta3}" class="form-control" placeholder="Escribir.."
+							autocomplete="off" th:readonly="${mensaje != null}" rows="5" cols="50" required></textarea>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="input-group flex-nowrap">
+						<span class="input-group-text" id="addon-wrapping">Colocar observaciones</span>
+						<textarea th:field="*{observaciones}" aria-label="With textarea" class="form-control"
+							th:readonly="${mensaje != null}" rows="12" cols="50" required></textarea>
+					</div>
+				</div>
+			<div class="col-md-4">
+				<div class="mb-3">
+					<label class="form-label">Fecha de Entrevista:</label>
+					<input type="date" th:field="*{fecha}" class="form-control" />
+				</div>
+			</div>
+			<button type="submit" class="btn btn-success">Actualizar Entrevista</button>
+		</form>
+	</div>
+</body>
+
+</html>

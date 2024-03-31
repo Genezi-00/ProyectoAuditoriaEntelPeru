@@ -1,0 +1,74 @@
+.crearusuario {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 100px;
+    transition: 1s;
+}
+
+.crearusuario h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.fa {
+    margin-right: 10px;
+}
+
+#enviarregistro {
+    background-color: #4cad47;
+    color: #000000;
+    border-radius: 15px; /* Aumenta el valor para hacer las esquinas más ovaladas */
+    padding: 10px 40px;
+    transition: 0.3s;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+#enviarregistro:hover{
+    background-color: #0e4b0b;
+}
+
+.crearusuario i {
+    font-size: 30px;
+    margin-right: 10px;
+}
+
+.consulta {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.consulta{
+    margin-bottom: 20px;
+}
+
+.consulta label {
+    font-weight: bold;
+    font-size: 50px;
+}
+
+.consulta input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}

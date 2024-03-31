@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+	<title>Lista de Entrevistas del empleado</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link rel="stylesheet" th:href="@{../css/inicio.css}">
+	<style>
+		body {
+			background: linear-gradient(135deg, #007BFF, #B5EAEA, #007BFF);
+			font-family: 'Open Sans', sans-serif;
+			min-height: 100vh;
+		}
+
+		.container {
+			padding: 20px;
+			border-radius: 10px;
+			margin-top: 20px;
+		}
+
+		.table {
+
+			overflow: hidden;
+			background-color: rgb(255, 255, 255);
+		}
+
+
+
+		.table-hover tbody tr:hover {
+			background-color: rgba(0, 0, 0, 0.05);
+		}
+
+		.thead-dark th {
+			background-color: rgb(255, 255, 255);
+			color: #fff;
+		}
+	</style>
+</head>
+
+<body class="bg-light">
+	<div class="container mt-5">
+		<h2 class="mb-4 text-center text-white">Lista de Entrevistas del empleado</h2>
+		<a th:href="@{/empleados(area=${empleado.getArea()})}" class="btn btn-success mb-3">Regresar</a>
+		<table class="table table-bordered table-hover">
+			<thead class="thead-dark">
+				<tr>
+					<th>Código de Entrevista</th>
+					<th>Código de Auditoría</th>
+					<th>Fecha</th>
+					<th>Observaciones</th>
+					<th>Estado</th>
+					<th th:if="${user.getRole() eq 'ADMIN'}">Acciones</th>
+					<th>Exportar</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="entrevista : ${entrevistas}">
+					<td th:text="${entrevista.cod_entrevista}"></td>
+					<td th:text="${entrevista.auditoria.codigo_auditoria}"></td>
+					<td th:text="${entrevista.fecha}"></td>
+					<td th:text="${entrevista.observaciones}"></td>
+					<td th:text="${entrevista.estado}"></td>
+					<td th:if="${user.getRole() eq 'ADMIN'}">
+						<div class="d-flex">
+							<button class="btn btn-success btn-sm"
+								th:onclick="'aprobarEntrevista(' + ${entrevista.cod_entrevista} + ')'">
+								<i class="fas fa-check"></i>
+							</button>
+							<button class="btn btn-danger btn-sm ml-2"
+								th:onclick="'rechazarEntrevista(' + ${entrevista.cod_entrevista} + ')'">
+								<i class="fas fa-times"></i>
+							</button>
+						</div>
+					</td>
+					<td>
+						<a th:href="@{/exportar-pdf/}+${entrevista.cod_entrevista}+'/'+${empleado.getDNI()}"
+							class="btn btn-outline-danger btn-export" id="btnGenerarPDF">
+							<i class="fa-solid fa-file-pdf fa-2x"></i><br>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+	<!-- Asegúrate de incluir la biblioteca Font Awesome para obtener los iconos -->
+	<script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
+
+
+<script th:inline="javascript">
+	async function aprobarEntrevista(id) {
+		try {
+			await fetch('/aprobar/' + id, {method: 'GET'});
+			console.log('Entrevista aprobada');
+		} catch (error) {
+			console.error('Error al aprobar la entrevista', error);
+		}
+		// Recargar la página después de aprobar
+		location.reload();
+	}
+
+	async function rechazarEntrevista(id) {
+		try {
+			await fetch('/rechazar/' + id, {method: 'GET'});
+			console.log('Entrevista rechazada');
+		} catch (error) {
+			console.error('Error al rechazar la entrevista', error);
+		}
+		// Recargar la página después de rechazar
+		location.reload();
+	}
+</script>
+</div>
+
+<!-- Asegúrate de incluir la biblioteca Font Awesome para obtener los iconos -->
+<script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

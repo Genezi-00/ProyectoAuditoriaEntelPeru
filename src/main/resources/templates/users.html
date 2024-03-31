@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lista de Usuarios</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{../css/inicio.css}">
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	
+	<style>
+		body {
+			background: linear-gradient(135deg, #007BFF, #B5EAEA, #007BFF);
+			font-family: 'Open Sans', sans-serif;
+			min-height: 100vh;
+			/*display: flex;*/
+			/*justify-content: center;*/
+			/*align-items: center;*/
+			/*flex-direction: column;*/
+		}
+
+		.container {
+			background-color: #f8f9fa;
+			width: 60%;
+			padding: 20px;
+			border-radius: 5px;
+			/*text-align: center;*/
+		}
+
+		h1 {
+			color: rgb(0, 128, 192);
+			text-align: center;
+			margin-bottom: 20px;
+			font-weight: bold;
+		}
+
+		.justificado {
+			text-align: justify;
+		}
+
+		td {
+			height: 60px;
+			vertical-align: middle;
+		}
+
+		.custom-container {
+			text-align: center;
+		}
+
+		h2 {
+			font-size: 18px;
+		}
+
+		.btn-export {
+			margin-right: 10px;
+			width: 60px;
+		}
+	</style>
+</head>
+
+<body>
+	<nav class="nav">
+		<div class="nav__container">
+			<h1 id="truet" class="nav__title"><a th:href="@{/inicio-page}"><img src="./img/truetech.png" alt="truetech"
+						id="tt"></a>
+				Auditoria Interna</h1>
+			<a href="#menu" class="nav__menu">
+				<i class="fa-solid fa-bars nav__icon"></i>
+			</a>
+			<a href="#" class="nav__menu nav__menu--second">
+				<i class="fa-solid fa-x nav__icon"></i>
+			</a>
+			<ul class="dropdown" id="menu">
+				<li class="dropdown__list">
+					<a href="#" class="dropdown__link">
+						<i class="fa-solid fa-user dropdown__icon"></i>
+						<span class="dropdown__span">[[${userP.getFullname()}]]</span>
+						<i class="fa-solid fa-arrow-down dropdown__arrow"></i>
+						<input type="checkbox" class="dropdown__check">
+					</a>
+					<div class="dropdown__content">
+						<ul class="dropdown__sub">
+							<li class="dropdown__li">
+								<a class="dropdown__anchor">[[${userP.getRole()}]]</a>
+							</li>
+						</ul>
+					</div>
+				</li>
+
+				<!--a-->
+				<li class="dropdown__list">
+					<a href="#" class="dropdown__link">
+						<i class="fa-solid fa-clipboard dropdown__icon"></i>
+						<span class="dropdown__span">Auditoria</span>
+						<i class="fa-solid fa-arrow-down dropdown__arrow"></i>
+
+						<input type="checkbox" class="dropdown__check">
+					</a>
+					<div class="dropdown__content">
+						<ul class="dropdown__sub">
+							<li class="dropdown__li">
+								<a th:href="@{/auditoria}" class="dropdown__anchor">Actualizar Auditoria</a>
+							</li>
+						</ul>
+					</div>
+				</li>
+				<li class="dropdown__list">
+					<a href="#" class="dropdown__link">
+						<i class="fa-solid fa-city dropdown__icon"></i>
+						<span class="dropdown__span">Proveedor</span>
+						<i class="fa-solid fa-arrow-down dropdown__arrow"></i>
+						<input type="checkbox" class="dropdown__check">
+					</a>
+					<div class="dropdown__content">
+						<ul class="dropdown__sub">
+							<li class="dropdown__li">
+								<a th:href="@{/areas}" class="dropdown__anchor">Actualizar proveedor</a>
+							</li>
+						</ul>
+					</div>
+
+				<li class="dropdown__list" sec:authorize="hasAuthority('ADMIN')">
+					<a href="#" class="dropdown__link">
+						<i class="fa-solid fa-gear dropdown__icon"></i>
+						<span class="dropdown__span">Mantenimiento</span>
+						<i class="fa-solid fa-arrow-down dropdown__arrow"></i>
+
+						<input type="checkbox" class="dropdown__check">
+					</a>
+					<div class="dropdown__content">
+						<ul class="dropdown__sub">
+							<!--Cuando tenga la autoridad admin se podrar visualizar "Crear Usuario"-->
+							<li class="dropdown__li" sec:authorize="hasAuthority('ADMIN')">
+								<!--
+									Otra forma de hacerlo
+									th:if="${user.getRole() eq 'ADMIN'}"-->
+								<a th:href="@{/registration}" class="dropdown__anchor">Crear Usuario</a>
+							</li>
+							<li class="dropdown__li">
+								<a th:href="@{/usuarios}" class="dropdown__anchor">Editar Perfil</a>
+							</li>
+						</ul>
+					</div>
+				</li>
+				<li class="dropdown__list">
+					<a href="#" class="dropdown__link" id="modoOscuroBtn">
+						<i class="fa-solid fa-circle-half-stroke dropdown__icon"></i>
+						<span class="dropdown__span">Modo Oscuro</span>
+					</a>
+				</li>
+				<li class="dropdown__list">
+					<span sec:authorize="isAuthenticated">
+						<a th:href="@{/logout}" class="dropdown__link">
+							<i class="fa-solid fa-sign-out dropdown__icon"></i>Salir</a>
+					</span>
+				</li>
+
+
+			</ul>
+		</div>
+	</nav>
+	<div class="container mt-4">
+		<div class="container custom-container">
+			<h1>Usuarios registrados en el sistema</h1>
+		</div>
+		<div class="d-flex align-items-center">
+			<div class="col-md-2">
+				<h2>Generar Reportes :</h2>
+			</div>
+			<a th:href="@{/export-pdf}" class="btn btn-outline-danger btn-export" id="btnGenerarPDF">
+				<i class="fa-solid fa-file-pdf fa-2x"></i><br>
+			</a>
+			<a th:href="@{/export-xls}" class="btn btn-outline-success btn-export" id="btnGenerarExcel">
+				<i class="fa-solid fa-file-excel fa-2x"></i><br>
+			</a>
+		</div>
+		<table class="table table-striped table-bordered table-hover mt-3">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Username</th>
+					<th>Role</th>
+					<th>Nombre Completo</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="user : ${userList}">
+					<td th:text="${user.id}"></td>
+					<td th:text="${user.username}"></td>
+					<td th:text="${user.role}"></td>
+					<td th:text="${user.fullname}"></td>
+					<td th:unless="${userP.getUsername() eq user.username}">
+						<a class="btn btn-primary eBtn" data-toggle="modal" data-target="#exampleModal"
+							th:onclick="editarUsuario([[${user.id}]])">Edit</a>
+						<a th:onclick="eliminarUsuario([[${user.id}]])" class="btn btn-danger dBtn">Delete</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	</div>
+
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+		aria-hidden="true">
+		<form th:action="@{/usuarios/guardar}" method="post">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Actualizar Usuario</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="id" class="col-form-label">Identificador:</label>
+							<input type="text" class="form-control" id="id" name="id" th:value="${user.id}" readonly>
+						</div>
+
+						<div class="form-group">
+							<label for="username" class="col-form-label">Nombre de Usuario:</label>
+							<input type="text" class="form-control" id="username" name="username"
+								th:value="${user.username}">
+						</div>
+						<div class="form-group">
+							<label for="changePassword" class="col-form-label">Desea cambiar la contraseña?</label>
+							<select class="form-control" id="changePassword" name="changePassword"
+								onchange="togglePasswordInput()">
+								<option value="yes">Yes</option>
+								<option selected value="no">No</option>
+							</select>
+						</div>
+
+						<div id="passwordInput" style="display:none;" class="form-group">
+							<label for="newPassword" class="col-form-label">New Contraseña:</label>
+							<input type="password" class="form-control" id="newPassword" name="password"
+								disabled="disabled">
+						</div>
+
+						<div class="form-group" id="contenedorContraseña" style="display: none;">
+							<label for="password" class="col-form-label">Contraseña Actual:</label>
+							<input type="password" class="form-control" id="password" name="password"
+								th:value="${user.password}">
+						</div>
+
+						<div class="form-group">
+							<label for="role" class="col-form-label">Role:</label>
+							<select class="form-control" id="role" name="role">
+								<option value="USER" th:selected="${user.role eq 'USER'}">USER</option>
+								<option value="ADMIN" th:selected="${user.role eq 'ADMIN'}">ADMIN</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="fullname" class="col-form-label">Nombre Completo:</label>
+							<input type="text" class="form-control" id="fullname" name="fullname"
+								th:value="${user.fullname}" required>
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<input type="submit" class="btn btn-primary" value="Save" />
+					</div>
+		</form>
+	</div>
+
+	<script>
+		$(document).ready(function () {
+			// Deshabilitar el campo #newPassword al cargar la página
+			$('#newPassword').attr('readonly', 'readonly').attr('disabled', 'disabled');
+		});
+
+		function togglePasswordInput() {
+			var changePassword = document.getElementById('changePassword');
+			var passwordInput = document.getElementById('passwordInput');
+			var contenedorContraseña = document.getElementById('contenedorContraseña');
+
+			if (changePassword.value === 'yes') {
+				passwordInput.style.display = 'block';
+				contenedorContraseña.style.display = 'none';
+				$('#password').attr('readonly', 'readonly').attr('disabled', 'disabled');
+				$('#newPassword').removeAttr('readonly').removeAttr('disabled').prop('required', true);
+
+			} else {
+				passwordInput.style.display = 'none';
+				$('#password').removeAttr('readonly').removeAttr('disabled');
+				$('#newPassword').attr('readonly', 'readonly').attr('disabled', 'disabled');
+			}
+		}
+
+		function editarUsuario(userId) {
+			// Realiza una solicitud AJAX para obtener los datos del usuario por ID
+			$.ajax({
+				url: '/usuarios/buscarUno/' + userId,
+				type: 'GET',
+				success: function (user) {
+					// Llena los campos del formulario con los datos obtenidos
+					$('#id').val(user.id);
+					$('#username').val(user.username);
+					$('#role').val(user.role);
+					$('#fullname').val(user.fullname);
+					$('#password').val(user.password);
+				},
+				error: function () {
+					console.log('Error al obtener los datos del usuario.');
+				}
+			});
+		}
+	</script>
+	<script src="/js/eliminar.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	</div>
+</body>
+
+</html>
